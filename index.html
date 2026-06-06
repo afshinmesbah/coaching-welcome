@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>خوش آمدید</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #f7f3ee;
+      --stone:   #e8e0d5;
+      --ink:     #2c2825;
+      --warm:    #8b6f5e;
+      --gold:    #c9a96e;
+      --muted:   #a09080;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      font-family: 'Vazirmatn', serif;
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    /* Subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Decorative circle — top left */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -120px;
+      left: -120px;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #e6d5c3 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .stage {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* Thin horizontal rule with gold centre dot */
+    .rule {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: min(340px, 90%);
+      margin-bottom: 2.8rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.1s;
+    }
+    .rule::before, .rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+    .rule::after {
+      background: linear-gradient(to left, transparent, var(--gold));
+    }
+    .rule-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .greeting-label {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.25s;
+    }
+
+    .greeting-name {
+      font-size: clamp(1.9rem, 5vw, 2.8rem);
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.45s;
+    }
+
+    .greeting-welcome {
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      font-weight: 300;
+      color: var(--warm);
+      margin-bottom: 2.6rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.6s;
+    }
+
+    .sub-text {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 380px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.75s;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 0.85rem 2.4rem;
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'Vazirmatn', serif;
+      font-size: 0.92rem;
+      font-weight: 400;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: background 0.25s, transform 0.2s;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.9s;
+    }
+    .cta-btn:hover {
+      background: var(--warm);
+      transform: translateY(-2px);
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--stone);
+      z-index: 10;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, var(--warm), var(--gold));
+      transition: width linear;
+    }
+
+    .countdown-note {
+      position: fixed;
+      bottom: 14px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      z-index: 10;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+      animation-delay: 1.2s;
+    }
+
+    /* Fade-out when redirecting */
+    .stage.fade-out {
+      animation: fadeOut 0.6s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; }
+    }
+
+    /* Fallback if no name in URL */
+    .error-state {
+      font-size: 1rem;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+      animation-delay: 0.3s;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <div class="rule"><div class="rule-dot"></div></div>
+
+  <div id="main-content">
+    <!-- Populated by JS -->
+  </div>
+
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+<div class="countdown-note" id="countdownNote"></div>
+
+<script>
+  // ── CONFIG ──────────────────────────────────────────────────
+  // Replace this with your actual Google Form published URL
+  var FORM_URL = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform';
+
+  // Redirect delay in seconds
+  var REDIRECT_DELAY = 6;
+  // ────────────────────────────────────────────────────────────
+
+  function safeBase64Decode(str) {
+    try {
+      // URL-safe base64: restore standard chars
+      str = str.replace(/-/g, '+').replace(/_/g, '/');
+      // Pad if needed
+      while (str.length % 4) str += '=';
+      return decodeURIComponent(escape(atob(str)));
+    } catch(e) {
+      return null;
+    }
+  }
+
+  function getParam(name) {
+    var params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+
+  var encoded = getParam('c');
+  var content = document.getElementById('main-content');
+
+  if (!encoded) {
+    content.innerHTML =
+      '<p class="error-state">لینک معتبر نیست. لطفاً لینک صحیح را از کوچ خود دریافت کنید.</p>';
+  } else {
+    var decoded = safeBase64Decode(encoded);
+    var title = '', name = '';
+
+    if (decoded) {
+      try {
+        var parts = JSON.parse(decoded);
+        title = parts.t || '';
+        name  = parts.n || decoded;
+      } catch(e) {
+        name = decoded;
+      }
+    }
+
+    var displayName = title ? (title + ' ' + name) : name;
+
+    content.innerHTML =
+      '<p class="greeting-label">کوچینگ — پرسشنامه اولیه</p>' +
+      '<h1 class="greeting-name">' + displayName + '،</h1>' +
+      '<p class="greeting-welcome">خوش آمدید</p>' +
+      '<p class="sub-text">پرسشنامه‌ای که پیش رو دارید برای آشنایی بهتر ما با یکدیگر طراحی شده است.<br>وقت کافی بگذارید و صادقانه پاسخ دهید.</p>' +
+      '<a href="' + FORM_URL + '" class="cta-btn" id="formBtn">ورود به پرسشنامه</a>';
+
+    // Countdown + progress bar
+    var bar  = document.getElementById('progressBar');
+    var note = document.getElementById('countdownNote');
+    var elapsed = 0;
+    var interval = 100; // ms
+    var total = REDIRECT_DELAY * 1000;
+
+    var timer = setInterval(function() {
+      elapsed += interval;
+      var pct = (elapsed / total) * 100;
+      bar.style.width = pct + '%';
+      var remaining = Math.ceil((total - elapsed) / 1000);
+      note.textContent = 'انتقال خودکار به پرسشنامه در ' + remaining + ' ثانیه — یا روی دکمه کلیک کنید';
+
+      if (elapsed >= total) {
+        clearInterval(timer);
+        document.getElementById('stage').classList.add('fade-out');
+        setTimeout(function() { window.location.href = FORM_URL; }, 600);
+      }
+    }, interval);
+
+    // Manual click cancels countdown
+    document.addEventListener('click', function(e) {
+      if (e.target && e.target.id === 'formBtn') {
+        clearInterval(timer);
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
