@@ -235,7 +235,7 @@
         'افشین مصباح' +
       '</p>' +
       '<div class="divider"></div>' +
-      '<a href="' + FORM_URL + '" class="cta-btn" id="formBtn">ورود به پرسشنامه</a>' +
+      '<a href="' + FORM_URL + '?c=' + encoded + '" class="cta-btn" id="formBtn">ورود به پرسشنامه</a>' +
       '<div class="countdown-note" id="countdownNote"></div>' +
       '<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>';
 
@@ -253,7 +253,7 @@
       if (elapsed >= total) {
         done = true;
         clearInterval(timer);
-        window.location.href = FORM_URL;
+        window.location.href = FORM_URL + '?c=' + encoded;
       }
     }, 100);
 
