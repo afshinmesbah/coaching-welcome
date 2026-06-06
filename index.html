@@ -160,9 +160,6 @@
       text-decoration: none;
       letter-spacing: 0.04em;
       transition: background 0.25s, transform 0.2s;
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards;
-      animation-delay: 0.9s;
     }
     .cta-btn:hover { background: var(--warm); transform: translateY(-2px); }
 
@@ -173,9 +170,6 @@
       margin-top: 0.6rem;
       margin-bottom: 0.8rem;
       min-height: 1.2em;
-      opacity: 0;
-      animation: fadeUp 0.5s ease forwards;
-      animation-delay: 1.2s;
     }
 
     /* Progress bar at very bottom */
@@ -217,7 +211,7 @@
     <div id="main-content"></div>
   </div>
 
-  <div class="footer" id="footer" style="display:none;">
+  <div class="footer" id="footer" style="visibility:hidden;">
     <a href="#" class="cta-btn" id="formBtn">ورود به پرسشنامه</a>
     <div class="countdown-note" id="countdownNote"></div>
     <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
@@ -267,7 +261,7 @@
       '</p>';
 
     btn.href = FORM_URL;
-    footer.style.display = 'flex';
+    footer.style.visibility = 'visible';
 
     var elapsed = 0, done = false;
     var total   = REDIRECT_DELAY * 1000;
